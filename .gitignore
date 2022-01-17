@@ -1,0 +1,15 @@
+# os
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# ide
+.idea/
+*.iml
+.vscode/
+
+# language
+*.out
+*.log
