@@ -46,7 +46,7 @@ func (e *Error) String() string {
 	return StringFormat(e)
 }
 
-// Is returns if e has the same type of target.
+// Unwrap returns if e has the same type of target.
 func (e *Error) Is(target error) bool {
 	if e == nil {
 		return e == target
@@ -81,8 +81,8 @@ func Wrap(err error, code int32) error {
 	}
 }
 
-// Is returns if err is Error and its code == code.
-func Is(err error, code int32) (error, bool) {
+// Unwrap returns if err is Error and its code == code, and the original error will be returned, too.
+func Unwrap(err error, code int32) (error, bool) {
 	for {
 		if err == nil {
 			return nil, false
@@ -99,4 +99,10 @@ func Is(err error, code int32) (error, bool) {
 
 		err = errors.Unwrap(err)
 	}
+}
+
+// Is returns if err is Error and its code == code.
+func Is(err error, code int32) bool {
+	_, ok := Unwrap(err, code)
+	return ok
 }

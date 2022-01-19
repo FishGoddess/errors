@@ -24,17 +24,18 @@ func TestError(err error) error {
 }
 
 // IsTestError if err is test error.
-func IsTestError(err error) (error, bool) {
+func IsTestError(err error) bool {
 	return errors.Is(err, codeTestError)
 }
 
 func main() {
-	// We provide two graceful ways to handle error in Go: Wrap() and Is().
-	// Wrap wraps error with a code and Is returns one error is with this code.
+	// We provide three graceful ways to handle error in Go: Wrap() and Unwrap() and Is().
+	// Wrap wraps error with a code and Unwrap returns one error with this code.
+	// Is returns one error is with the same code or not.
 	// As you can see, we define two functions above, and this is the basic way to use this lib.
 	err := TestError(errors.New("something wrong"))
-	if e, ok := IsTestError(err); ok {
-		fmt.Printf("I got a test error which says: \"%s\"\n", e.Error())
+	if IsTestError(err) {
+		fmt.Printf("I got a test error")
 	}
 
 	// Also, we provide some basic errors for you:

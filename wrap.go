@@ -32,8 +32,13 @@ func NotFound(err error) error {
 }
 
 // IsNotFound if err is not found.
-func IsNotFound(err error) (error, bool) {
+func IsNotFound(err error) bool {
 	return Is(err, codeNotFound)
+}
+
+// UnwrapNotFound if err is not found.
+func UnwrapNotFound(err error) (error, bool) {
+	return Unwrap(err, codeNotFound)
 }
 
 // Timeout returns a timeout error.
@@ -42,8 +47,13 @@ func Timeout(err error) error {
 }
 
 // IsTimeout if err is timeout.
-func IsTimeout(err error) (error, bool) {
+func IsTimeout(err error) bool {
 	return Is(err, codeTimeout)
+}
+
+// UnwrapTimeout if err is timeout.
+func UnwrapTimeout(err error) (error, bool) {
+	return Unwrap(err, codeTimeout)
 }
 
 // NetworkError returns a network error.
@@ -52,8 +62,13 @@ func NetworkError(err error) error {
 }
 
 // IsNetworkError if err is network error.
-func IsNetworkError(err error) (error, bool) {
+func IsNetworkError(err error) bool {
 	return Is(err, codeNetworkError)
+}
+
+// UnwrapNetworkError if err is network error.
+func UnwrapNetworkError(err error) (error, bool) {
+	return Unwrap(err, codeNetworkError)
 }
 
 // DBError returns a db error.
@@ -62,6 +77,11 @@ func DBError(err error) error {
 }
 
 // IsDBError if err is db error.
-func IsDBError(err error) (error, bool) {
+func IsDBError(err error) bool {
 	return Is(err, codeDBError)
+}
+
+// UnwrapDBError if err is db error.
+func UnwrapDBError(err error) (error, bool) {
+	return Unwrap(err, codeDBError)
 }

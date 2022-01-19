@@ -23,7 +23,7 @@ func TestError(t *testing.T) {
 	}
 
 	err = Wrap(errors.New("500"), code)
-	if e, ok := Is(err, code); !ok || e.Error() != "500" {
-		t.Error("Wrap or Is is wrong", err, e)
+	if e, ok := Unwrap(err, code); !ok || e.Error() != "500" {
+		t.Error("Wrap or Unwrap is wrong", err, e)
 	}
 }

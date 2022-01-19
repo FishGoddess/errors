@@ -21,8 +21,12 @@ func TestNotFound(t *testing.T) {
 	}
 
 	err = NotFound(errors.New("404"))
-	if e, ok := IsNotFound(err); !ok || e.Error() != "404" {
-		t.Error("NotFound or IsNotFound is wrong", err)
+	if !IsNotFound(err) {
+		t.Error("IsNotFound is wrong", err)
+	}
+
+	if e, ok := UnwrapNotFound(err); !ok || e.Error() != "404" {
+		t.Error("NotFound or UnwrapNotFound is wrong", err)
 	}
 }
 
@@ -33,9 +37,13 @@ func TestTimeout(t *testing.T) {
 		t.Error("Timeout is wrong", err)
 	}
 
-	err = Timeout(errors.New("Timeout"))
-	if e, ok := IsTimeout(err); !ok || e.Error() != "Timeout" {
-		t.Error("Timeout or IsTimeout is wrong", err)
+	err = Timeout(errors.New("timeout"))
+	if !IsTimeout(err) {
+		t.Error("IsTimeout is wrong", err)
+	}
+
+	if e, ok := UnwrapTimeout(err); !ok || e.Error() != "timeout" {
+		t.Error("Timeout or UnwrapTimeout is wrong", err)
 	}
 }
 
@@ -46,9 +54,13 @@ func TestNetworkError(t *testing.T) {
 		t.Error("NetworkError is wrong", err)
 	}
 
-	err = NetworkError(errors.New("NetworkError"))
-	if e, ok := IsNetworkError(err); !ok || e.Error() != "NetworkError" {
-		t.Error("NetworkError or IsNetworkError is wrong", err)
+	err = NetworkError(errors.New("network error"))
+	if !IsNetworkError(err) {
+		t.Error("IsNetworkError is wrong", err)
+	}
+
+	if e, ok := UnwrapNetworkError(err); !ok || e.Error() != "network error" {
+		t.Error("NetworkError or UnwrapNetworkError is wrong", err)
 	}
 }
 
@@ -59,8 +71,12 @@ func TestDBError(t *testing.T) {
 		t.Error("DBError is wrong", err)
 	}
 
-	err = DBError(errors.New("DBError"))
-	if e, ok := IsDBError(err); !ok || e.Error() != "DBError" {
-		t.Error("DBError or IsDBError is wrong", err)
+	err = DBError(errors.New("db error"))
+	if !IsDBError(err) {
+		t.Error("IsDBError is wrong", err)
+	}
+
+	if e, ok := UnwrapDBError(err); !ok || e.Error() != "db error" {
+		t.Error("DBError or UnwrapDBError is wrong", err)
 	}
 }
