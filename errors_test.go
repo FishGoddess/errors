@@ -1,3 +1,11 @@
+// Copyright 2022 Ye Zi Jie.  All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+//
+// Author: FishGoddess
+// Email: fishgoddess@qq.com
+// Created at 2022/01/19 23:43:15
+
 package errors
 
 import (
@@ -9,26 +17,13 @@ import (
 func TestError(t *testing.T) {
 	code := int32(500)
 
-	err := WithCode(nil, code)
+	err := Wrap(nil, code)
 	if err != nil {
-		t.Error("WithCode is wrong", err)
+		t.Error("Wrap is wrong", err)
 	}
 
-	err = WithCode(errors.New("500"), code)
-	if !Is(err, code) {
-		t.Error("WithCode or Is is wrong", err)
-	}
-}
-
-// go test -v -cover -run=^TestNotFound$
-func TestNotFound(t *testing.T) {
-	err := NotFound(nil)
-	if err != nil {
-		t.Error("NotFound is wrong", err)
-	}
-
-	err = NotFound(errors.New("500"))
-	if !IsNotFound(err) {
-		t.Error("NotFound or IsNotFound is wrong", err)
+	err = Wrap(errors.New("500"), code)
+	if e, ok := Is(err, code); !ok || e.Error() != "500" {
+		t.Error("Wrap or Is is wrong", err, e)
 	}
 }
