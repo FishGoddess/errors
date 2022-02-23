@@ -1,10 +1,6 @@
-// Copyright 2022 Ye Zi Jie.  All rights reserved.
+// Copyright 2022 FishGoddess.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-//
-// Author: FishGoddess
-// Email: fishgoddess@qq.com
-// Created at 2022/01/19 23:52:40
 
 package errors
 
@@ -12,6 +8,23 @@ import (
 	"errors"
 	"testing"
 )
+
+// go test -v -cover -run=^TestBadRequest$
+func TestBadRequest(t *testing.T) {
+	err := BadRequest(nil)
+	if err != nil {
+		t.Error("BadRequest is wrong", err)
+	}
+
+	err = BadRequest(errors.New("400"))
+	if !IsBadRequest(err) {
+		t.Error("IsBadRequest is wrong", err)
+	}
+
+	if e, ok := UnwrapBadRequest(err); !ok || e.Error() != "400" {
+		t.Error("BadRequest or UnwrapBadRequest is wrong", err)
+	}
+}
 
 // go test -v -cover -run=^TestNotFound$
 func TestNotFound(t *testing.T) {
@@ -27,6 +40,23 @@ func TestNotFound(t *testing.T) {
 
 	if e, ok := UnwrapNotFound(err); !ok || e.Error() != "404" {
 		t.Error("NotFound or UnwrapNotFound is wrong", err)
+	}
+}
+
+// go test -v -cover -run=^TestInternalServerError$
+func TestInternalServerError(t *testing.T) {
+	err := InternalServerError(nil)
+	if err != nil {
+		t.Error("InternalServerError is wrong", err)
+	}
+
+	err = InternalServerError(errors.New("400"))
+	if !IsInternalServerError(err) {
+		t.Error("IsInternalServerError is wrong", err)
+	}
+
+	if e, ok := UnwrapInternalServerError(err); !ok || e.Error() != "400" {
+		t.Error("InternalServerError or UnwrapInternalServerError is wrong", err)
 	}
 }
 

@@ -1,10 +1,6 @@
-// Copyright 2022 Ye Zi Jie.  All rights reserved.
+// Copyright 2022 FishGoddess.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-//
-// Author: FishGoddess
-// Email: fishgoddess@qq.com
-// Created at 2022/01/20 00:07:35
 
 package main
 
@@ -39,7 +35,9 @@ func main() {
 	}
 
 	// Also, we provide some basic errors for you:
-	err = errors.NotFound(nil) // Classic enough! Ah :)
+	err = errors.BadRequest(nil)          // Classic enough! Ah :)
+	err = errors.NotFound(nil)            // Classic enough! Ah :)
+	err = errors.InternalServerError(nil) // Classic enough! Ah :)
 	err = errors.Timeout(nil)
 	err = errors.NetworkError(nil)
 	err = errors.DBError(nil)

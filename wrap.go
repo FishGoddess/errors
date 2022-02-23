@@ -1,10 +1,6 @@
-// Copyright 2022 Ye Zi Jie.  All rights reserved.
+// Copyright 2022 FishGoddess.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-//
-// Author: FishGoddess
-// Email: fishgoddess@qq.com
-// Created at 2022/01/19 23:43:15
 
 package errors
 
@@ -14,16 +10,33 @@ import (
 )
 
 const (
-	_                = http.StatusTeapot   // :)
-	codeNotFound     = http.StatusNotFound // Classic...
-	codeTimeout      = 1000
-	codeNetworkError = 1100
-	codeDBError      = 1200
+	_                       = http.StatusTeapot              // :)
+	codeBadRequest          = http.StatusBadRequest          // Classic...
+	codeNotFound            = http.StatusNotFound            // Classic...
+	codeInternalServerError = http.StatusInternalServerError // Classic...
+	codeTimeout             = 1000
+	codeNetworkError        = 1100
+	codeDBError             = 1200
 )
 
 // New returns a string error.
 func New(text string) error {
 	return stderrors.New(text)
+}
+
+// BadRequest returns a bad request error.
+func BadRequest(err error) error {
+	return Wrap(err, codeBadRequest)
+}
+
+// IsBadRequest if err is bad request.
+func IsBadRequest(err error) bool {
+	return Is(err, codeBadRequest)
+}
+
+// UnwrapBadRequest if err is bad request.
+func UnwrapBadRequest(err error) (error, bool) {
+	return Unwrap(err, codeBadRequest)
 }
 
 // NotFound returns a not found error.
@@ -39,6 +52,21 @@ func IsNotFound(err error) bool {
 // UnwrapNotFound if err is not found.
 func UnwrapNotFound(err error) (error, bool) {
 	return Unwrap(err, codeNotFound)
+}
+
+// InternalServerError returns an internal server error.
+func InternalServerError(err error) error {
+	return Wrap(err, codeInternalServerError)
+}
+
+// IsInternalServerError if err is an internal server.
+func IsInternalServerError(err error) bool {
+	return Is(err, codeInternalServerError)
+}
+
+// UnwrapInternalServerError if err is an internal server.
+func UnwrapInternalServerError(err error) (error, bool) {
+	return Unwrap(err, codeInternalServerError)
 }
 
 // Timeout returns a timeout error.

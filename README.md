@@ -49,7 +49,9 @@ func main() {
 	}
 
 	// Also, we provide some basic errors for you:
-	err = errors.NotFound(nil) // Classic enough! Ah :)
+	err = errors.BadRequest(nil)          // Classic enough! Ah :)
+	err = errors.NotFound(nil)            // Classic enough! Ah :)
+	err = errors.InternalServerError(nil) // Classic enough! Ah :)
 	err = errors.Timeout(nil)
 	err = errors.NetworkError(nil)
 	err = errors.DBError(nil)

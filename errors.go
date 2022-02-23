@@ -1,10 +1,6 @@
-// Copyright 2022 Ye Zi Jie.  All rights reserved.
+// Copyright 2022 FishGoddess.  All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
-//
-// Author: FishGoddess
-// Email: fishgoddess@qq.com
-// Created at 2022/01/19 23:43:15
 
 package errors
 
@@ -46,7 +42,7 @@ func (e *Error) String() string {
 	return StringFormat(e)
 }
 
-// Unwrap returns if e has the same type of target.
+// Is returns if e has the same type of target.
 func (e *Error) Is(target error) bool {
 	if e == nil {
 		return e == target
