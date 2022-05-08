@@ -26,6 +26,23 @@ func TestBadRequest(t *testing.T) {
 	}
 }
 
+// go test -v -cover -run=^TestForbidden$
+func TestForbidden(t *testing.T) {
+	err := Forbidden(nil)
+	if err != nil {
+		t.Error("Forbidden is wrong", err)
+	}
+
+	err = Forbidden(errors.New("403"))
+	if !IsForbidden(err) {
+		t.Error("IsForbidden is wrong", err)
+	}
+
+	if e, ok := UnwrapForbidden(err); !ok || e.Error() != "403" {
+		t.Error("Forbidden or UnwrapForbidden is wrong", err)
+	}
+}
+
 // go test -v -cover -run=^TestNotFound$
 func TestNotFound(t *testing.T) {
 	err := NotFound(nil)

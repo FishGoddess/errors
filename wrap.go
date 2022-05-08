@@ -12,6 +12,7 @@ import (
 const (
 	_                       = http.StatusTeapot              // :)
 	codeBadRequest          = http.StatusBadRequest          // Classic...
+	codeForbidden           = http.StatusForbidden           // Classic...
 	codeNotFound            = http.StatusNotFound            // Classic...
 	codeInternalServerError = http.StatusInternalServerError // Classic...
 	codeTimeout             = 1000
@@ -37,6 +38,21 @@ func IsBadRequest(err error) bool {
 // UnwrapBadRequest if err is bad request.
 func UnwrapBadRequest(err error) (error, bool) {
 	return Unwrap(err, codeBadRequest)
+}
+
+// Forbidden returns a forbidden error.
+func Forbidden(err error) error {
+	return Wrap(err, codeForbidden)
+}
+
+// IsForbidden if err is forbidden.
+func IsForbidden(err error) bool {
+	return Is(err, codeForbidden)
+}
+
+// UnwrapForbidden if err is forbidden.
+func UnwrapForbidden(err error) (error, bool) {
+	return Unwrap(err, codeForbidden)
 }
 
 // NotFound returns a not found error.
