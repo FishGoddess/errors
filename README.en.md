@@ -2,8 +2,8 @@
 
 [![Go Doc](_icons/godoc.svg)](https://pkg.go.dev/github.com/FishGoddess/errors)
 [![License](_icons/license.svg)](https://opensource.org/licenses/MIT)
-[![License](_icons/build.svg)](_icons/build.svg)
 [![License](_icons/coverage.svg)](_icons/coverage.svg)
+![Test](https://github.com/FishGoddess/errors/actions/workflows/test.yml/badge.svg)
 
 **Errors** is a lib for handling error gracefully in Go.
 
@@ -61,4 +61,4 @@ func main() {
 
 ### 👥 Contributing
 
-If you find that something is not working as expected, just fork and fix by yourself, don't open an _**issue**_ :).
+If you find that something is not working as expected, just fork and fix by yourself or open an _**issue**_ :).

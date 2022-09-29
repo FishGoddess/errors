@@ -10,14 +10,14 @@ import (
 )
 
 var (
-	// ErrorFormat formats e and returns a string in Error().
-	ErrorFormat = func(e *Error) string {
-		return fmt.Sprintf("%s", e.err.Error())
+	// FormatError formats e and returns a string in Error().
+	FormatError = func(e *Error) string {
+		return fmt.Sprintf("%d - %s", e.code, e.err.Error())
 	}
 
-	// StringFormat formats e and returns a string in String().
-	StringFormat = func(e *Error) string {
-		return fmt.Sprintf("%d (%s)", e.code, e.err.Error())
+	// FormatString formats e and returns a string in String().
+	FormatString = func(e *Error) string {
+		return fmt.Sprintf("%d - %s", e.code, e.err.Error())
 	}
 )
 
@@ -32,14 +32,16 @@ func (e *Error) Error() string {
 	if e == nil || e.err == nil {
 		return "<nil>"
 	}
-	return ErrorFormat(e)
+
+	return FormatError(e)
 }
 
 func (e *Error) String() string {
 	if e == nil || e.err == nil {
 		return "<nil>"
 	}
-	return StringFormat(e)
+
+	return FormatString(e)
 }
 
 // Is returns if e has the same type of target.

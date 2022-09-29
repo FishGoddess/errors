@@ -6,6 +6,7 @@ package errors
 
 import (
 	stderrors "errors"
+	"fmt"
 	"net/http"
 )
 
@@ -23,6 +24,11 @@ const (
 // New returns a string error.
 func New(text string) error {
 	return stderrors.New(text)
+}
+
+// NewF returns a string error.
+func NewF(text string, params ...interface{}) error {
+	return fmt.Errorf(text, params...)
 }
 
 // BadRequest returns a bad request error.
