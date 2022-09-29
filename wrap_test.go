@@ -37,7 +37,7 @@ func TestBadRequest(t *testing.T) {
 		t.Error("IsBadRequest is wrong", err)
 	}
 
-	if e, ok := UnwrapBadRequest(err); !ok || e.Error() != "400 - bad request" {
+	if e, ok := UnwrapBadRequest(err); !ok || e.Error() != "bad request" {
 		t.Error("BadRequest or UnwrapBadRequest is wrong", err)
 	}
 }
@@ -54,7 +54,7 @@ func TestForbidden(t *testing.T) {
 		t.Error("IsForbidden is wrong", err)
 	}
 
-	if e, ok := UnwrapForbidden(err); !ok || e.Error() != "403 - forbidden" {
+	if e, ok := UnwrapForbidden(err); !ok || e.Error() != "forbidden" {
 		t.Error("Forbidden or UnwrapForbidden is wrong", err)
 	}
 }
@@ -71,7 +71,7 @@ func TestNotFound(t *testing.T) {
 		t.Error("IsNotFound is wrong", err)
 	}
 
-	if e, ok := UnwrapNotFound(err); !ok || e.Error() != "404 - not found" {
+	if e, ok := UnwrapNotFound(err); !ok || e.Error() != "not found" {
 		t.Error("NotFound or UnwrapNotFound is wrong", err)
 	}
 }
@@ -83,12 +83,12 @@ func TestInternalServerError(t *testing.T) {
 		t.Error("InternalServerError is wrong", err)
 	}
 
-	err = InternalServerError(errors.New("InternalServerError"))
+	err = InternalServerError(errors.New("internal server error"))
 	if !IsInternalServerError(err) {
 		t.Error("IsInternalServerError is wrong", err)
 	}
 
-	if e, ok := UnwrapInternalServerError(err); !ok || e.Error() != "500 - InternalServerError" {
+	if e, ok := UnwrapInternalServerError(err); !ok || e.Error() != "internal server error" {
 		t.Error("InternalServerError or UnwrapInternalServerError is wrong", err)
 	}
 }
@@ -105,7 +105,7 @@ func TestTimeout(t *testing.T) {
 		t.Error("IsTimeout is wrong", err)
 	}
 
-	if e, ok := UnwrapTimeout(err); !ok || e.Error() != "1000 - timeout" {
+	if e, ok := UnwrapTimeout(err); !ok || e.Error() != "timeout" {
 		t.Error("Timeout or UnwrapTimeout is wrong", err)
 	}
 }
@@ -122,7 +122,7 @@ func TestNetworkError(t *testing.T) {
 		t.Error("IsNetworkError is wrong", err)
 	}
 
-	if e, ok := UnwrapNetworkError(err); !ok || e.Error() != "1100 - network error" {
+	if e, ok := UnwrapNetworkError(err); !ok || e.Error() != "network error" {
 		t.Error("NetworkError or UnwrapNetworkError is wrong", err)
 	}
 }
@@ -139,7 +139,7 @@ func TestDBError(t *testing.T) {
 		t.Error("IsDBError is wrong", err)
 	}
 
-	if e, ok := UnwrapDBError(err); !ok || e.Error() != "1200 - db error" {
+	if e, ok := UnwrapDBError(err); !ok || e.Error() != "db error" {
 		t.Error("DBError or UnwrapDBError is wrong", err)
 	}
 }

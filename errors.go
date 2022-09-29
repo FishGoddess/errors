@@ -12,12 +12,12 @@ import (
 var (
 	// FormatError formats e and returns a string in Error().
 	FormatError = func(e *Error) string {
-		return fmt.Sprintf("%d - %s", e.code, e.err.Error())
+		return e.err.Error()
 	}
 
 	// FormatString formats e and returns a string in String().
 	FormatString = func(e *Error) string {
-		return fmt.Sprintf("%d - %s", e.code, e.err.Error())
+		return fmt.Sprintf("%d (%s)", e.code, e.err.Error())
 	}
 )
 
