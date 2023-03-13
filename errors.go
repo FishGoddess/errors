@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess.  All rights reserved.
+// Copyright 2022 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -9,6 +9,10 @@ import (
 	"fmt"
 )
 
+const (
+	nilString = "<nil>"
+)
+
 var (
 	// FormatError formats e and returns a string in Error().
 	FormatError = func(e *Error) string {
@@ -17,20 +21,21 @@ var (
 
 	// FormatString formats e and returns a string in String().
 	FormatString = func(e *Error) string {
-		return fmt.Sprintf("%d (%s)", e.code, e.err.Error())
+		return fmt.Sprintf("%d (%s)", e.code, e.msg)
 	}
 )
 
-// Error wraps err with code.
+// Error wraps err with some information.
 type Error struct {
-	err  error
+	err error
+
 	code int32
+	msg  string
 }
 
-// Error returns the msg of e.
 func (e *Error) Error() string {
 	if e == nil || e.err == nil {
-		return "<nil>"
+		return nilString
 	}
 
 	return FormatError(e)
@@ -38,7 +43,7 @@ func (e *Error) Error() string {
 
 func (e *Error) String() string {
 	if e == nil || e.err == nil {
-		return "<nil>"
+		return nilString
 	}
 
 	return FormatString(e)
@@ -68,15 +73,19 @@ func (e *Error) Unwrap() error {
 }
 
 // Wrap wraps err with code
-func Wrap(err error, code int32) error {
+func Wrap(err error, code int32, opts ...Option) error {
 	if err == nil {
 		return nil
 	}
 
-	return &Error{
+	e := &Error{
 		err:  err,
 		code: code,
+		msg:  err.Error(),
 	}
+
+	applyOptions(e, opts)
+	return e
 }
 
 // Unwrap returns if err is Error and its code == code, and the original error will be returned, too.
@@ -103,4 +112,18 @@ func Unwrap(err error, code int32) (error, bool) {
 func Is(err error, code int32) bool {
 	_, ok := Unwrap(err, code)
 	return ok
+}
+
+// Msg returns the msg of err.
+func Msg(err error) string {
+	if err == nil {
+		return nilString
+	}
+
+	e, ok := err.(*Error)
+	if !ok {
+		return err.Error()
+	}
+
+	return e.msg
 }

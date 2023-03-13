@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess.  All rights reserved.
+// Copyright 2022 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -11,14 +11,16 @@ import (
 )
 
 const (
-	_                       = http.StatusTeapot              // :)
+	_ = http.StatusTeapot // :)
+
 	codeBadRequest          = http.StatusBadRequest          // Classic...
 	codeForbidden           = http.StatusForbidden           // Classic...
 	codeNotFound            = http.StatusNotFound            // Classic...
 	codeInternalServerError = http.StatusInternalServerError // Classic...
-	codeTimeout             = 1000
-	codeNetworkError        = 1100
-	codeDBError             = 1200
+
+	codeTimeout      = 1000
+	codeNetworkError = 1100
+	codeDBError      = 1200
 )
 
 // New returns a string error.
@@ -32,8 +34,8 @@ func NewF(text string, params ...interface{}) error {
 }
 
 // BadRequest returns a bad request error.
-func BadRequest(err error) error {
-	return Wrap(err, codeBadRequest)
+func BadRequest(err error, opts ...Option) error {
+	return Wrap(err, codeBadRequest, opts...)
 }
 
 // IsBadRequest if err is bad request.
@@ -47,8 +49,8 @@ func UnwrapBadRequest(err error) (error, bool) {
 }
 
 // Forbidden returns a forbidden error.
-func Forbidden(err error) error {
-	return Wrap(err, codeForbidden)
+func Forbidden(err error, opts ...Option) error {
+	return Wrap(err, codeForbidden, opts...)
 }
 
 // IsForbidden if err is forbidden.
@@ -62,8 +64,8 @@ func UnwrapForbidden(err error) (error, bool) {
 }
 
 // NotFound returns a not found error.
-func NotFound(err error) error {
-	return Wrap(err, codeNotFound)
+func NotFound(err error, opts ...Option) error {
+	return Wrap(err, codeNotFound, opts...)
 }
 
 // IsNotFound if err is not found.
@@ -77,8 +79,8 @@ func UnwrapNotFound(err error) (error, bool) {
 }
 
 // InternalServerError returns an internal server error.
-func InternalServerError(err error) error {
-	return Wrap(err, codeInternalServerError)
+func InternalServerError(err error, opts ...Option) error {
+	return Wrap(err, codeInternalServerError, opts...)
 }
 
 // IsInternalServerError if err is an internal server.
@@ -92,8 +94,8 @@ func UnwrapInternalServerError(err error) (error, bool) {
 }
 
 // Timeout returns a timeout error.
-func Timeout(err error) error {
-	return Wrap(err, codeTimeout)
+func Timeout(err error, opts ...Option) error {
+	return Wrap(err, codeTimeout, opts...)
 }
 
 // IsTimeout if err is timeout.
@@ -107,8 +109,8 @@ func UnwrapTimeout(err error) (error, bool) {
 }
 
 // NetworkError returns a network error.
-func NetworkError(err error) error {
-	return Wrap(err, codeNetworkError)
+func NetworkError(err error, opts ...Option) error {
+	return Wrap(err, codeNetworkError, opts...)
 }
 
 // IsNetworkError if err is network error.
@@ -122,8 +124,8 @@ func UnwrapNetworkError(err error) (error, bool) {
 }
 
 // DBError returns a db error.
-func DBError(err error) error {
-	return Wrap(err, codeDBError)
+func DBError(err error, opts ...Option) error {
+	return Wrap(err, codeDBError, opts...)
 }
 
 // IsDBError if err is db error.

@@ -1,4 +1,4 @@
-// Copyright 2022 FishGoddess.  All rights reserved.
+// Copyright 2022 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
@@ -6,6 +6,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/FishGoddess/errors"
 )
@@ -31,7 +32,7 @@ func main() {
 	// As you can see, we define two functions above, and this is the basic way to use this lib.
 	err := TestError(errors.New("something wrong"))
 	if IsTestError(err) {
-		fmt.Printf("I got a test error")
+		fmt.Println("I got a test error")
 	}
 
 	// Also, we provide some basic errors for you:
@@ -42,4 +43,9 @@ func main() {
 	err = errors.Timeout(nil)
 	err = errors.NetworkError(nil)
 	err = errors.DBError(nil)
+
+	// Use WithMsg to carry a message.
+	err = errors.Wrap(io.EOF, codeTestError, errors.WithMsg("test"))
+	fmt.Println(err.Error())
+	fmt.Println(errors.Msg(err))
 }
