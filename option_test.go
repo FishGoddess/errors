@@ -33,4 +33,12 @@ func TestWithMsg(t *testing.T) {
 	if got.String() != expect.String() {
 		t.Errorf("got %s != expect %s", got.String(), expect.String())
 	}
+
+	got = &Error{msg: ""}
+	expect = &Error{msg: "ok123"}
+
+	WithMsg("%s%d", "ok", 123)(got)
+	if got.String() != expect.String() {
+		t.Errorf("got %s != expect %s", got.String(), expect.String())
+	}
 }

@@ -4,6 +4,8 @@
 
 package errors
 
+import "fmt"
+
 type Option func(e *Error)
 
 func (o Option) Apply(e *Error) {
@@ -17,8 +19,12 @@ func applyOptions(e *Error, opts []Option) {
 }
 
 // WithMsg sets msg to e.
-func WithMsg(msg string) Option {
+func WithMsg(msg string, params ...interface{}) Option {
 	return func(e *Error) {
+		if len(params) > 0 {
+			msg = fmt.Sprintf(msg, params...)
+		}
+
 		e.msg = msg
 	}
 }
