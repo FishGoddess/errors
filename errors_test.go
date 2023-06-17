@@ -6,6 +6,7 @@ package errors
 
 import (
 	"errors"
+	"io"
 	"testing"
 )
 
@@ -21,6 +22,31 @@ func TestError(t *testing.T) {
 	err = Wrap(errors.New("500"), code)
 	if e, ok := Unwrap(err, code); !ok || e.Error() != "500" {
 		t.Errorf("err %+v is wrong", err)
+	}
+}
+
+// go test -v -cover -run=^TestCode$
+func TestCode(t *testing.T) {
+	code := int32(500)
+
+	got := Code(nil)
+	if got != codeNil {
+		t.Errorf("got %d is wrong", got)
+	}
+
+	got = Code(Wrap(nil, code))
+	if got != codeNil {
+		t.Errorf("got %d is wrong", got)
+	}
+
+	got = Code(io.EOF)
+	if got != codeUnknown {
+		t.Errorf("got %d is wrong", got)
+	}
+
+	got = Code(Wrap(errors.New("500"), code))
+	if got != code {
+		t.Errorf("got %d is wrong", got)
 	}
 }
 

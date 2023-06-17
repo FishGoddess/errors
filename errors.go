@@ -10,6 +10,11 @@ import (
 )
 
 const (
+	codeNil     = 0
+	codeUnknown = 1
+)
+
+const (
 	nilString = "<nil>"
 )
 
@@ -112,6 +117,20 @@ func Unwrap(err error, code int32) (error, bool) {
 func Is(err error, code int32) bool {
 	_, ok := Unwrap(err, code)
 	return ok
+}
+
+// Code returns the code of err.
+func Code(err error) int32 {
+	if err == nil {
+		return codeNil
+	}
+
+	e, ok := err.(*Error)
+	if !ok {
+		return codeUnknown
+	}
+
+	return e.code
 }
 
 // Msg returns the msg of err.

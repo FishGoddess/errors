@@ -61,6 +61,7 @@ func main() {
 	// Use WithMsg to carry a message.
 	err = errors.Wrap(io.EOF, codeTestError, errors.WithMsg("test"))
 	fmt.Println(err.Error())
+	fmt.Println(errors.Code(err))
 	fmt.Println(errors.Msg(err))
 }
 ```
