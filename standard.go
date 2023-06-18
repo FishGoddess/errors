@@ -5,33 +5,19 @@
 package errors
 
 import (
-	stderrors "errors"
-	"fmt"
 	"net/http"
 )
 
 const (
 	_ = http.StatusTeapot // :)
+)
 
+const (
 	codeBadRequest          = http.StatusBadRequest          // Classic...
 	codeForbidden           = http.StatusForbidden           // Classic...
 	codeNotFound            = http.StatusNotFound            // Classic...
 	codeInternalServerError = http.StatusInternalServerError // Classic...
-
-	codeTimeout      = 1000
-	codeNetworkError = 1100
-	codeDBError      = 1200
 )
-
-// New returns a string error.
-func New(text string) error {
-	return stderrors.New(text)
-}
-
-// NewF returns a string error.
-func NewF(text string, params ...interface{}) error {
-	return fmt.Errorf(text, params...)
-}
 
 // BadRequest returns a bad request error.
 func BadRequest(err error, opts ...Option) error {
@@ -91,49 +77,4 @@ func IsInternalServerError(err error) bool {
 // UnwrapInternalServerError if err is an internal server.
 func UnwrapInternalServerError(err error) (error, bool) {
 	return Unwrap(err, codeInternalServerError)
-}
-
-// Timeout returns a timeout error.
-func Timeout(err error, opts ...Option) error {
-	return Wrap(err, codeTimeout, opts...)
-}
-
-// IsTimeout if err is timeout.
-func IsTimeout(err error) bool {
-	return Is(err, codeTimeout)
-}
-
-// UnwrapTimeout if err is timeout.
-func UnwrapTimeout(err error) (error, bool) {
-	return Unwrap(err, codeTimeout)
-}
-
-// NetworkError returns a network error.
-func NetworkError(err error, opts ...Option) error {
-	return Wrap(err, codeNetworkError, opts...)
-}
-
-// IsNetworkError if err is network error.
-func IsNetworkError(err error) bool {
-	return Is(err, codeNetworkError)
-}
-
-// UnwrapNetworkError if err is network error.
-func UnwrapNetworkError(err error) (error, bool) {
-	return Unwrap(err, codeNetworkError)
-}
-
-// DBError returns a db error.
-func DBError(err error, opts ...Option) error {
-	return Wrap(err, codeDBError, opts...)
-}
-
-// IsDBError if err is db error.
-func IsDBError(err error) bool {
-	return Is(err, codeDBError)
-}
-
-// UnwrapDBError if err is db error.
-func UnwrapDBError(err error) (error, bool) {
-	return Unwrap(err, codeDBError)
 }
