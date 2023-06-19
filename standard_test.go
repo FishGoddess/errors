@@ -60,6 +60,23 @@ func TestNotFound(t *testing.T) {
 	}
 }
 
+// go test -v -cover -run=^TestRequestTimeout$
+func TestRequestTimeout(t *testing.T) {
+	err := RequestTimeout(nil)
+	if err != nil {
+		t.Error("RequestTimeout is wrong", err)
+	}
+
+	err = RequestTimeout(errors.New("request timeout"))
+	if !IsRequestTimeout(err) {
+		t.Error("IsRequestTimeout is wrong", err)
+	}
+
+	if e, ok := UnwrapRequestTimeout(err); !ok || e.Error() != "request timeout" {
+		t.Error("RequestTimeout or UnwrapRequestTimeout is wrong", err)
+	}
+}
+
 // go test -v -cover -run=^TestInternalServerError$
 func TestInternalServerError(t *testing.T) {
 	err := InternalServerError(nil)

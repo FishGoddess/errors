@@ -16,6 +16,7 @@ const (
 	codeBadRequest          = http.StatusBadRequest          // Classic...
 	codeForbidden           = http.StatusForbidden           // Classic...
 	codeNotFound            = http.StatusNotFound            // Classic...
+	codeRequestTimeout      = http.StatusRequestTimeout      // Classic...
 	codeInternalServerError = http.StatusInternalServerError // Classic...
 )
 
@@ -62,6 +63,21 @@ func IsNotFound(err error) bool {
 // UnwrapNotFound if err is not found.
 func UnwrapNotFound(err error) (error, bool) {
 	return Unwrap(err, codeNotFound)
+}
+
+// RequestTimeout returns a request timeout error.
+func RequestTimeout(err error, opts ...Option) error {
+	return Wrap(err, codeRequestTimeout, opts...)
+}
+
+// IsRequestTimeout if err is request timeout.
+func IsRequestTimeout(err error) bool {
+	return Is(err, codeRequestTimeout)
+}
+
+// UnwrapRequestTimeout if err is request timeout.
+func UnwrapRequestTimeout(err error) (error, bool) {
+	return Unwrap(err, codeRequestTimeout)
 }
 
 // InternalServerError returns an internal server error.

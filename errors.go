@@ -14,7 +14,7 @@ func New(text string) error {
 	return errors.New(text)
 }
 
-// NewF returns a string error.
-func NewF(text string, params ...interface{}) error {
+// Newf returns a string error formatted with params.
+func Newf(text string, params ...interface{}) error {
 	return fmt.Errorf(text, params...)
 }

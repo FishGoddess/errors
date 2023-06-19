@@ -39,10 +39,10 @@ func main() {
 	err = errors.BadRequest(nil)          // Classic enough! Ah :)
 	err = errors.Forbidden(nil)           // Classic enough! Ah :)
 	err = errors.NotFound(nil)            // Classic enough! Ah :)
+	err = errors.RequestTimeout(nil)      // Classic enough! Ah :)
 	err = errors.InternalServerError(nil) // Classic enough! Ah :)
-	err = errors.Timeout(nil)
-	err = errors.NetworkError(nil)
 	err = errors.DBError(nil)
+	err = errors.PageTokenInvalid(nil)
 
 	// Use WithMsg to carry a message.
 	err = errors.Wrap(io.EOF, codeTestError, errors.WithMsg("test"))

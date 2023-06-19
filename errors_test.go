@@ -16,9 +16,9 @@ func TestNew(t *testing.T) {
 	}
 }
 
-// go test -v -cover -run=^TestNewF$
-func TestNewF(t *testing.T) {
-	err := NewF("test %d %.2f", 123, 3.14)
+// go test -v -cover -run=^TestNewf$
+func TestNewf(t *testing.T) {
+	err := Newf("test %d %.2f", 123, 3.14)
 	if err.Error() != "test 123 3.14" {
 		t.Errorf("err.Error() %s != 'test 123 3.14'", err.Error())
 	}
