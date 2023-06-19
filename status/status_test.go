@@ -25,6 +25,30 @@ func TestRegisterStatus(t *testing.T) {
 	}
 }
 
+// go test -v -cover -run=^TestRegisterStatuses$
+func TestRegisterStatuses(t *testing.T) {
+	registered := []*Status{
+		New(123, "abc", nil),
+		New(666, "xxx", nil),
+	}
+
+	RegisterStatuses(registered...)
+
+	for i := range registered {
+		found := false
+		for _, status := range statuses {
+			if status == registered[i] {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			t.Error("registered status not found", statuses)
+		}
+	}
+}
+
 func TestParse(t *testing.T) {
 	codeBadRequest := int32(http.StatusBadRequest)
 	codeForbidden := int32(http.StatusForbidden)

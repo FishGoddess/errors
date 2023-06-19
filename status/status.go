@@ -70,6 +70,16 @@ func RegisterStatus(status *Status) {
 	statusesLock.Unlock()
 }
 
+// RegisterStatuses registers some statuses to local statuses so that we can use it in Parse.
+func RegisterStatuses(registerStatus ...*Status) {
+	statusesLock.Lock()
+	defer statusesLock.Unlock()
+
+	for _, status := range registerStatus {
+		statuses = append(statuses, status)
+	}
+}
+
 // Parse parses err and returns its code and error created from msg.
 func Parse(err error) (int32, string) {
 	if err == nil {

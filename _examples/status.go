@@ -53,4 +53,10 @@ func main() {
 	// Try to remove errors.WithMsg("hello") above and run again.
 	code, msg = status.Parse(err)
 	fmt.Println(code, msg)
+
+	// Also, you can register many statuses at one time by RegisterStatuses.
+	status.RegisterStatuses(
+		status.New(123, "abc", nil),
+		status.New(666, "xxx", nil),
+	)
 }

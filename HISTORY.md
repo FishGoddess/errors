@@ -1,5 +1,11 @@
 ## ✒ 历史版本的特性介绍 (Features in old versions)
 
+### v0.5.1
+
+> 此版本发布于 2023-06-19
+
+* 增加 RegisterStatuses 函数
+
 ### v0.5.0
 
 > 此版本发布于 2023-06-19
