@@ -82,6 +82,11 @@ func RegisterStatuses(registerStatus ...*Status) {
 
 // Parse parses err and returns its code and error created from msg.
 func Parse(err error) (int32, string) {
+	return ParseOrDefault(err, CodeUnknown, MsgUnknown)
+}
+
+// ParseOrDefault parses err and returns its code and error created from msg.
+func ParseOrDefault(err error, defaultCode int32, defaultMsg string) (int32, string) {
 	if err == nil {
 		return CodeOK, ""
 	}
@@ -97,6 +102,6 @@ func Parse(err error) (int32, string) {
 		}
 	}
 
-	msg := errors.MsgOrDefault(err, MsgUnknown)
-	return CodeUnknown, msg
+	msg := errors.MsgOrDefault(err, defaultMsg)
+	return defaultCode, msg
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/FishGoddess/errors"
 )
 
+// go test -v -cover -run=^TestRegisterStatus$
 func TestRegisterStatus(t *testing.T) {
 	registered := New(666, "xxx", nil)
 	RegisterStatus(registered)
@@ -49,6 +50,7 @@ func TestRegisterStatuses(t *testing.T) {
 	}
 }
 
+// go test -v -cover -run=^TestParse$
 func TestParse(t *testing.T) {
 	codeBadRequest := int32(http.StatusBadRequest)
 	codeForbidden := int32(http.StatusForbidden)
