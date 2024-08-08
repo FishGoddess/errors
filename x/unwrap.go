@@ -60,3 +60,24 @@ func CodeMessage(err error, defaultCode int32, defaultMessage string) (int32, st
 
 	return code, message
 }
+
+// Match unwraps error and check if its code equals to code.
+func Match(err error, code int32) bool {
+	if err == nil {
+		return code == 0
+	}
+
+	cerr, ok := err.(interface {
+		Code() int32
+	})
+	if ok {
+		return cerr.Code() == code
+	}
+
+	var xerr *Error
+	if As(err, &xerr) {
+		return xerr.Code() == code
+	}
+
+	return false
+}

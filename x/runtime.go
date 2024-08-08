@@ -19,8 +19,8 @@ func Caller() string {
 }
 
 func Callers() []string {
-	pcs := make([]uintptr, 16)
-	n := runtime.Callers(2, pcs)
+	var pcs [16]uintptr
+	n := runtime.Callers(2, pcs[:])
 	frames := runtime.CallersFrames(pcs[:n])
 
 	var callers []string

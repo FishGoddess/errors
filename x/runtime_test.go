@@ -8,6 +8,7 @@ import (
 	"testing"
 )
 
+// go test -v -run=^$ -bench=^BenchmarkCaller$ -benchtime=1s
 // BenchmarkCaller-2   	 1390318	       876.7 ns/op	     296 B/op	       3 allocs/op
 func BenchmarkCaller(b *testing.B) {
 	b.ReportAllocs()
@@ -18,6 +19,7 @@ func BenchmarkCaller(b *testing.B) {
 	}
 }
 
+// go test -v -run=^$ -bench=^BenchmarkCallers$ -benchtime=1s
 // BenchmarkCallers-2   	  443419	      2573 ns/op	     732 B/op	      12 allocs/op
 func BenchmarkCallers(b *testing.B) {
 	b.ReportAllocs()

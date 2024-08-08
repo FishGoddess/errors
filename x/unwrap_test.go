@@ -11,6 +11,8 @@ import (
 
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestCode$
 func TestCode(t *testing.T) {
+	testErr := &testError{}
+
 	testCases := []struct {
 		err         error
 		defaultCode int32
@@ -25,6 +27,11 @@ func TestCode(t *testing.T) {
 			err:         io.EOF,
 			defaultCode: 999,
 			code:        999,
+		},
+		{
+			err:         testErr,
+			defaultCode: 999,
+			code:        testErr.Code(),
 		},
 		{
 			err:         Wrap(1000, "wow"),
@@ -79,6 +86,55 @@ func TestMessage(t *testing.T) {
 		message := Message(testCase.err, testCase.defaultMessage)
 		if message != testCase.message {
 			t.Errorf("message %s != testCase.message %s", message, testCase.message)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestMatch$
+func TestMatch(t *testing.T) {
+	testErr := &testError{}
+
+	testCases := []struct {
+		err   error
+		code  int32
+		match bool
+	}{
+		{
+			err:   nil,
+			code:  0,
+			match: true,
+		},
+		{
+			err:   nil,
+			code:  999,
+			match: false,
+		},
+		{
+			err:   io.EOF,
+			code:  999,
+			match: false,
+		},
+		{
+			err:   testErr,
+			code:  testErr.Code(),
+			match: true,
+		},
+		{
+			err:   Wrap(1000, "wow"),
+			code:  1000,
+			match: true,
+		},
+		{
+			err:   Wrap(1000, "eof").With(io.EOF),
+			code:  1000,
+			match: true,
+		},
+	}
+
+	for _, testCase := range testCases {
+		match := Match(testCase.err, testCase.code)
+		if match != testCase.match {
+			t.Errorf("match %+v != testCase.match %+v", match, testCase.match)
 		}
 	}
 }
