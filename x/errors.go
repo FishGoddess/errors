@@ -2,11 +2,15 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package x
+package errors
 
 import (
 	"errors"
 )
+
+func New(text string) error {
+	return errors.New(text)
+}
 
 // Is is a shortcut of errors.Is.
 func Is(err, target error) bool {

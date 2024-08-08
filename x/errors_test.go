@@ -2,9 +2,10 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package x
+package errors
 
 import (
+	"io"
 	"os"
 	"testing"
 )
@@ -24,18 +25,22 @@ func (te *testError) Error() string {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestIs$
 func TestIs(t *testing.T) {
 	testErr := &testError{reason: "test error"}
-	wrapErr := Wrap(testErr, -1000, "wrap test error")
+	wrapErr := Wrap(-1000, "wrap test error").With(testErr)
 
 	testCases := []struct {
 		err   error
 		cause error
 	}{
 		{
-			err:   Wrap(testErr, 1000, "wow"),
+			err:   io.EOF,
+			cause: io.EOF,
+		},
+		{
+			err:   Wrap(1000, "wow").With(testErr),
 			cause: testErr,
 		},
 		{
-			err:   Wrap(wrapErr, 1000, "wow too"),
+			err:   Wrap(1000, "wow too").With(wrapErr),
 			cause: testErr,
 		},
 	}
@@ -50,7 +55,7 @@ func TestIs(t *testing.T) {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestAs$
 func TestAs(t *testing.T) {
 	testErr := &testError{reason: "test error"}
-	wrapErr := Wrap(testErr, -1000, "wrap test error")
+	wrapErr := Wrap(-1000, "wrap test error").With(testErr)
 
 	targetTestErr := &testError{}
 	targetTestErr2 := &testError{}
@@ -63,19 +68,19 @@ func TestAs(t *testing.T) {
 		want   any
 	}{
 		{
-			err:    Wrap(testErr, 1000, "wow"),
+			err:    Wrap(1000, "wow").With(testErr),
 			target: &targetTestErr,
 			ok:     true,
 			want:   &testErr,
 		},
 		{
-			err:    Wrap(wrapErr, 1000, "wow too"),
+			err:    Wrap(1000, "wow too").With(wrapErr),
 			target: &targetTestErr2,
 			ok:     true,
 			want:   &testErr,
 		},
 		{
-			err:    New(1000, "no"),
+			err:    Wrap(1000, "no"),
 			target: &targetPathErr,
 			ok:     false,
 			want:   nil,
@@ -93,7 +98,7 @@ func TestAs(t *testing.T) {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestUnwrap$
 func TestUnwrap(t *testing.T) {
 	testErr := &testError{reason: "test error"}
-	wrapErr := Wrap(testErr, -1000, "wrap test error")
+	wrapErr := Wrap(-1000, "wrap test error").With(testErr)
 
 	testCases := []struct {
 		err   error
@@ -104,11 +109,11 @@ func TestUnwrap(t *testing.T) {
 			cause: nil,
 		},
 		{
-			err:   Wrap(testErr, 1000, "wow"),
+			err:   Wrap(1000, "wow").With(testErr),
 			cause: testErr,
 		},
 		{
-			err:   Wrap(wrapErr, 1000, "wow too"),
+			err:   Wrap(1000, "wow too").With(wrapErr),
 			cause: wrapErr,
 		},
 	}

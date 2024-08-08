@@ -2,45 +2,54 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package x
+package errors
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Error struct {
 	code    int32
 	message string
 	cause   error
+	caller  string
+	args    []any
 }
 
-// New returns *Error with code and message.
-func New(code int32, message string) *Error {
-	return &Error{
+// Wrap returns *Error with code and message formatted with args.
+func Wrap(code int32, message string, args ...any) *Error {
+	if len(args) > 0 {
+		message = fmt.Sprintf(message, args...)
+	}
+
+	err := &Error{
 		code:    code,
 		message: message,
 	}
+
+	return err
 }
 
-// Newf returns *Error with code and formatted message.
-func Newf(code int32, format string, args ...interface{}) *Error {
-	message := fmt.Sprintf(format, args...)
-	return New(code, message)
+func (e *Error) With(err error) *Error {
+	e.cause = err
+	return e
 }
 
-// Wrap wraps err to *Error with code and message.
-func Wrap(err error, code int32, message string) *Error {
-	return &Error{
-		code:    code,
-		message: message,
-		cause:   err,
-	}
+func (e *Error) WithCaller() *Error {
+	e.caller = Caller()
+	return e
 }
 
-// Wrapf wraps err to *Error with code and formatted message.
-func Wrapf(err error, code int32, format string, args ...interface{}) *Error {
-	message := fmt.Sprintf(format, args...)
-	return Wrap(err, code, message)
+func (e *Error) WithCallers() *Error {
+	callers := Callers()
+	e.caller = strings.Join(callers, "¦")
+	return e
+}
+
+func (e *Error) WithArgs(args ...any) *Error {
+	e.args = append(e.args, args...)
+	return e
 }
 
 // Code returns the code of *Error.

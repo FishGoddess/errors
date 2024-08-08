@@ -2,15 +2,15 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package x
+package errors
 
 import (
 	"io"
 	"testing"
 )
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestNew$
-func TestNew(t *testing.T) {
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWrap$
+func TestWrap(t *testing.T) {
 	testCases := []struct {
 		code    int32
 		message string
@@ -20,7 +20,7 @@ func TestNew(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		err := New(testCase.code, testCase.message)
+		err := Wrap(testCase.code, testCase.message)
 		if err.Code() != testCase.code {
 			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
 		}
@@ -35,8 +35,8 @@ func TestNew(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestWrap$
-func TestWrap(t *testing.T) {
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWrapWith$
+func TestWrapWith(t *testing.T) {
 	testCases := []struct {
 		code    int32
 		message string
@@ -47,7 +47,7 @@ func TestWrap(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		err := Wrap(testCase.cause, testCase.code, testCase.message)
+		err := Wrap(testCase.code, testCase.message).With(testCase.cause)
 		if err.Code() != testCase.code {
 			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
 		}
@@ -75,7 +75,7 @@ func TestErrorError(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		err := Wrap(testCase.cause, testCase.code, testCase.message)
+		err := Wrap(testCase.code, testCase.message).With(testCase.cause)
 		if err.Error() != testCase.errorString {
 			t.Errorf("err.Error() %s != testCase.errorString %s", err.Error(), testCase.errorString)
 		}

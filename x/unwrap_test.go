@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package x
+package errors
 
 import (
 	"io"
@@ -27,12 +27,12 @@ func TestCode(t *testing.T) {
 			code:        999,
 		},
 		{
-			err:         New(1000, "wow"),
+			err:         Wrap(1000, "wow"),
 			defaultCode: 999,
 			code:        1000,
 		},
 		{
-			err:         Wrap(io.EOF, 1000, "eof"),
+			err:         Wrap(1000, "eof").With(io.EOF),
 			defaultCode: 999,
 			code:        1000,
 		},
@@ -64,12 +64,12 @@ func TestMessage(t *testing.T) {
 			message:        "eof",
 		},
 		{
-			err:            New(1000, "wow"),
+			err:            Wrap(1000, "wow"),
 			defaultMessage: "xxx",
 			message:        "wow",
 		},
 		{
-			err:            Wrap(io.EOF, 1000, "eof"),
+			err:            Wrap(1000, "eof").With(io.EOF),
 			defaultMessage: "xxx",
 			message:        "eof",
 		},

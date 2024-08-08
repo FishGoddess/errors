@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
-package x
+package errors
 
 // Code unwraps error and gets code of it.
 // It returns 0 if err is nil.
