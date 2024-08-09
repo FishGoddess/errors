@@ -1,9 +1,9 @@
-.PHONY: test fmt
+.PHONY: fmt test
 
-all: test fmt
-
-test:
-	go test -cover ./...
+all: fmt test
 
 fmt:
 	go fmt ./...
+
+test:
+	go test -cover -count=1 -test.cpu=1 ./...

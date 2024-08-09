@@ -1,25 +1,164 @@
-// Copyright 2023 FishGoddess. All rights reserved.
+// Copyright 2024 FishGoddess. All rights reserved.
 // Use of this source code is governed by a MIT style
 // license that can be found in the LICENSE file.
 
 package errors
 
 import (
+	"errors"
+	"io"
+	"os"
 	"testing"
 )
 
-// go test -v -cover -run=^TestNew$
-func TestNew(t *testing.T) {
-	err := New("test")
-	if err.Error() != "test" {
-		t.Errorf("err.Error() %s != 'test'", err.Error())
+type testError struct {
+	reason string
+}
+
+func (te *testError) Code() int32 {
+	return 500
+}
+
+func (te *testError) Error() string {
+	return te.reason
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestIs$
+func TestIs(t *testing.T) {
+	testErr := &testError{reason: "test error"}
+	wrapErr := Wrap(-1000, "wrap test error").With(testErr)
+
+	testCases := []struct {
+		err   error
+		cause error
+	}{
+		{
+			err:   io.EOF,
+			cause: io.EOF,
+		},
+		{
+			err:   Wrap(1000, "wow").With(testErr),
+			cause: testErr,
+		},
+		{
+			err:   Wrap(1000, "wow too").With(wrapErr),
+			cause: testErr,
+		},
+	}
+
+	for _, testCase := range testCases {
+		if ok := Is(testCase.err, testCase.cause); !ok {
+			t.Errorf("testCase.err %+v isn't testCase.cause %+v", testCase.err, testCase.cause)
+		}
 	}
 }
 
-// go test -v -cover -run=^TestNewf$
-func TestNewf(t *testing.T) {
-	err := Newf("test %d %.2f", 123, 3.14)
-	if err.Error() != "test 123 3.14" {
-		t.Errorf("err.Error() %s != 'test 123 3.14'", err.Error())
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestAs$
+func TestAs(t *testing.T) {
+	testErr := &testError{reason: "test error"}
+	wrapErr := Wrap(-1000, "wrap test error").With(testErr)
+
+	targetTestErr := &testError{}
+	targetTestErr2 := &testError{}
+	targetPathErr := &os.PathError{}
+
+	testCases := []struct {
+		err    error
+		target any
+		ok     bool
+		want   any
+	}{
+		{
+			err:    Wrap(1000, "wow").With(testErr),
+			target: &targetTestErr,
+			ok:     true,
+			want:   &testErr,
+		},
+		{
+			err:    Wrap(1000, "wow too").With(wrapErr),
+			target: &targetTestErr2,
+			ok:     true,
+			want:   &testErr,
+		},
+		{
+			err:    Wrap(1000, "no"),
+			target: &targetPathErr,
+			ok:     false,
+			want:   nil,
+		},
+	}
+
+	for _, testCase := range testCases {
+		ok := As(testCase.err, testCase.target)
+		if ok != testCase.ok {
+			t.Errorf("err %+v ok %+v != err %+v testCase.ok %+v", testCase.err, testCase.target, ok, testCase.ok)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestUnwrap$
+func TestUnwrap(t *testing.T) {
+	testErr := &testError{reason: "test error"}
+	wrapErr := Wrap(-1000, "wrap test error").With(testErr)
+
+	testCases := []struct {
+		err   error
+		cause error
+	}{
+		{
+			err:   testErr,
+			cause: nil,
+		},
+		{
+			err:   Wrap(1000, "wow").With(testErr),
+			cause: testErr,
+		},
+		{
+			err:   Wrap(1000, "wow too").With(wrapErr),
+			cause: wrapErr,
+		},
+	}
+
+	for _, testCase := range testCases {
+		if Unwrap(testCase.err) != testCase.cause {
+			t.Errorf("Unwrap(testCase.err) %+v != testCase.cause %+v", Unwrap(testCase.err), testCase.cause)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestJoin$
+func TestJoin(t *testing.T) {
+	testCases := []struct {
+		errs []error
+	}{
+		{
+			errs: nil,
+		},
+		{
+			errs: []error{nil, nil},
+		},
+		{
+			errs: []error{io.EOF, &testError{}},
+		},
+		{
+			errs: []error{io.EOF, nil},
+		},
+	}
+
+	for _, testCase := range testCases {
+		got := Join(testCase.errs...)
+		want := errors.Join(testCase.errs...)
+
+		if got != nil && want != nil {
+			if got.Error() != want.Error() {
+				t.Errorf("got %+v != want %+v", got, want)
+			}
+
+			continue
+		}
+
+		if got != want {
+			t.Errorf("got %+v != want %+v", got, want)
+		}
 	}
 }
