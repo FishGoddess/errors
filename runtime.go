@@ -10,7 +10,7 @@ import (
 )
 
 func Caller() string {
-	_, file, line, ok := runtime.Caller(1)
+	_, file, line, ok := runtime.Caller(2)
 	if !ok {
 		return ""
 	}
@@ -20,7 +20,7 @@ func Caller() string {
 
 func Callers() []string {
 	var pcs [16]uintptr
-	n := runtime.Callers(2, pcs[:])
+	n := runtime.Callers(3, pcs[:])
 	frames := runtime.CallersFrames(pcs[:n])
 
 	var callers []string

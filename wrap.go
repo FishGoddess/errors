@@ -5,6 +5,7 @@
 package errors
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 )
@@ -14,7 +15,6 @@ type Error struct {
 	message string
 	cause   error
 	caller  string
-	args    []any
 }
 
 // Wrap returns *Error with code and message formatted with args.
@@ -47,11 +47,6 @@ func (e *Error) WithCallers() *Error {
 	return e
 }
 
-func (e *Error) WithArgs(args ...any) *Error {
-	e.args = append(e.args, args...)
-	return e
-}
-
 // Code returns the code of *Error.
 func (e *Error) Code() int32 {
 	return e.code
@@ -74,9 +69,16 @@ func (e *Error) Error() string {
 
 // String returns *Error as string.
 func (e *Error) String() string {
-	if e.cause == nil {
-		return fmt.Sprintf("%d: %s", e.code, e.message)
+	var buff bytes.Buffer
+	fmt.Fprintf(&buff, "%d: %s", e.code, e.message)
+
+	if e.caller != "" {
+		fmt.Fprintf(&buff, " [%s]", e.caller)
 	}
 
-	return fmt.Sprintf("%d: %s (%+v)", e.code, e.message, e.cause)
+	if e.cause != nil {
+		fmt.Fprintf(&buff, " (%+v)", e.cause)
+	}
+
+	return buff.String()
 }

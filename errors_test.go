@@ -5,6 +5,7 @@
 package errors
 
 import (
+	"errors"
 	"io"
 	"os"
 	"testing"
@@ -121,6 +122,43 @@ func TestUnwrap(t *testing.T) {
 	for _, testCase := range testCases {
 		if Unwrap(testCase.err) != testCase.cause {
 			t.Errorf("Unwrap(testCase.err) %+v != testCase.cause %+v", Unwrap(testCase.err), testCase.cause)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestJoin$
+func TestJoin(t *testing.T) {
+	testCases := []struct {
+		errs []error
+	}{
+		{
+			errs: nil,
+		},
+		{
+			errs: []error{nil, nil},
+		},
+		{
+			errs: []error{io.EOF, &testError{}},
+		},
+		{
+			errs: []error{io.EOF, nil},
+		},
+	}
+
+	for _, testCase := range testCases {
+		got := Join(testCase.errs...)
+		want := errors.Join(testCase.errs...)
+
+		if got != nil && want != nil {
+			if got.Error() != want.Error() {
+				t.Errorf("got %+v != want %+v", got, want)
+			}
+
+			continue
+		}
+
+		if got != want {
+			t.Errorf("got %+v != want %+v", got, want)
 		}
 	}
 }

@@ -39,9 +39,10 @@ func main() {
 	fmt.Println(errors.Code(io.EOF, 6699), errors.Message(io.EOF, "default message"))
 
 	// Also, we provide some useful information carrier for you.
-	err = errors.Wrap(9999, "io timeout").With(io.EOF).WithCaller().WithArgs("key", "value")
+	err = errors.Wrap(9999, "io timeout").With(io.EOF).WithCaller()
 	fmt.Println(err)
 }
+
 ```
 
 * [basic](_examples/basic.go)

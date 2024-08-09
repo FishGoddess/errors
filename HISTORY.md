@@ -1,6 +1,6 @@
 ## ✒ 历史版本的特性介绍 (Features in old versions)
 
-### v0.8.0
+### v0.6.0-alpha
 
 > 此版本发布于 2024-08-09
 
