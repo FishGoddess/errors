@@ -5,24 +5,48 @@
 package errors
 
 const (
-	CodeBadRequest   = 400
-	CodeForbidden    = 403
-	CodeNotFound     = 404
-	CodeRequireLogin = 1000
+	codeBadRequest   = 400
+	codeForbidden    = 403
+	codeNotFound     = 404
+	codeRequireLogin = 1000
 )
 
+// BadRequest returns *Error with bad request code.
 func BadRequest(message string) *Error {
-	return Wrap(CodeBadRequest, message)
+	return Wrap(codeBadRequest, message)
 }
 
+// Forbidden returns *Error with forbidden code.
 func Forbidden(message string) *Error {
-	return Wrap(CodeForbidden, message)
+	return Wrap(codeForbidden, message)
 }
 
+// NotFound returns *Error with not found code.
 func NotFound(message string) *Error {
-	return Wrap(CodeNotFound, message)
+	return Wrap(codeNotFound, message)
 }
 
+// RequireLogin returns *Error with require login code.
 func RequireLogin(message string) *Error {
-	return Wrap(CodeRequireLogin, message)
+	return Wrap(codeRequireLogin, message)
+}
+
+// MatchBadRequest matches err with bad request code.
+func MatchBadRequest(err error) bool {
+	return Match(err, codeBadRequest)
+}
+
+// MatchForbidden matches err with forbidden code.
+func MatchForbidden(err error) bool {
+	return Match(err, codeForbidden)
+}
+
+// MatchNotFound matches err with not found code.
+func MatchNotFound(err error) bool {
+	return Match(err, codeNotFound)
+}
+
+// MatchRequireLogin matches err with require login code.
+func MatchRequireLogin(err error) bool {
+	return Match(err, codeRequireLogin)
 }
