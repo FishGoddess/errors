@@ -41,6 +41,14 @@ func main() {
 	// Also, we provide some useful information carrier for you.
 	err = errors.Wrap(9999, "io timeout").With(io.EOF).WithCaller()
 	fmt.Println(err)
+
+	// What's more, we provide some shortcuts for you.
+	// All these ways are returning a *Error and you are free to use all methods on *Error.
+	berr := errors.BadRequest("id is wrong")
+	ferr := errors.Forbidden("user isn't allowed")
+	nerr := errors.NotFound("book not found")
+	rerr := errors.RequireLogin("user requires login")
+	fmt.Printf("%+v\n%+v\n%+v\n%+v\n", berr, ferr, nerr, rerr)
 }
 
 ```
