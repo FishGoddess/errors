@@ -13,8 +13,8 @@ func TestBadRequest(t *testing.T) {
 		code    int32
 	}{
 		{
-			message: "id is nil",
-			code:    CodeBadRequest,
+			message: "xxx",
+			code:    codeBadRequest,
 		},
 	}
 
@@ -33,8 +33,8 @@ func TestForbidden(t *testing.T) {
 		code    int32
 	}{
 		{
-			message: "id is nil",
-			code:    CodeForbidden,
+			message: "xxx",
+			code:    codeForbidden,
 		},
 	}
 
@@ -53,8 +53,8 @@ func TestNotFound(t *testing.T) {
 		code    int32
 	}{
 		{
-			message: "id is nil",
-			code:    CodeNotFound,
+			message: "xxx",
+			code:    codeNotFound,
 		},
 	}
 
@@ -73,8 +73,8 @@ func TestRequireLogin(t *testing.T) {
 		code    int32
 	}{
 		{
-			message: "id is nil",
-			code:    CodeRequireLogin,
+			message: "xxx",
+			code:    codeRequireLogin,
 		},
 	}
 
@@ -82,6 +82,78 @@ func TestRequireLogin(t *testing.T) {
 		err := RequireLogin(testCase.message)
 		if err.Code() != testCase.code {
 			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestMatchBadRequest$
+func TestMatchBadRequest(t *testing.T) {
+	testCases := []struct {
+		message string
+	}{
+		{
+			message: "xxx",
+		},
+	}
+
+	for _, testCase := range testCases {
+		err := BadRequest(testCase.message)
+		if !MatchBadRequest(err) {
+			t.Errorf("err %+v not match code %d", err, err.Code())
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestMatchForbidden$
+func TestMatchForbidden(t *testing.T) {
+	testCases := []struct {
+		message string
+	}{
+		{
+			message: "xxx",
+		},
+	}
+
+	for _, testCase := range testCases {
+		err := Forbidden(testCase.message)
+		if !MatchForbidden(err) {
+			t.Errorf("err %+v not match code %d", err, err.Code())
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestMatchNotFound$
+func TestMatchNotFound(t *testing.T) {
+	testCases := []struct {
+		message string
+	}{
+		{
+			message: "xxx",
+		},
+	}
+
+	for _, testCase := range testCases {
+		err := NotFound(testCase.message)
+		if !MatchNotFound(err) {
+			t.Errorf("err %+v not match code %d", err, err.Code())
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestMatchRequireLogin$
+func TestMatchRequireLogin(t *testing.T) {
+	testCases := []struct {
+		message string
+	}{
+		{
+			message: "xxx",
+		},
+	}
+
+	for _, testCase := range testCases {
+		err := RequireLogin(testCase.message)
+		if !MatchRequireLogin(err) {
+			t.Errorf("err %+v not match code %d", err, err.Code())
 		}
 	}
 }
