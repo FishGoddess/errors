@@ -4,6 +4,8 @@
 
 package errors
 
+import "fmt"
+
 // Code unwraps error and gets code of it.
 // It returns 0 if err is nil.
 // It returns defaultCode if err doesn't have a code.
@@ -30,7 +32,7 @@ func Code(err error, defaultCode int32) int32 {
 // Message unwraps error and gets message of it.
 // It returns "" if err is nil.
 // It returns defaultMessage if err doesn't have a message.
-func Message(err error, defaultMessage string) string {
+func Message(err error, defaultMessage string, args ...any) string {
 	if err == nil {
 		return ""
 	}
@@ -47,6 +49,10 @@ func Message(err error, defaultMessage string) string {
 		return xerr.Message()
 	}
 
+	if len(args) > 0 {
+		defaultMessage = fmt.Sprintf(defaultMessage, args...)
+	}
+
 	return defaultMessage
 }
 
@@ -54,9 +60,9 @@ func Message(err error, defaultMessage string) string {
 // It returns 0 & "" if err is nil.
 // It returns defaultCode if err doesn't have a code.
 // It returns defaultMessage if err doesn't have a message.
-func CodeMessage(err error, defaultCode int32, defaultMessage string) (int32, string) {
+func CodeMessage(err error, defaultCode int32, defaultMessage string, args ...any) (int32, string) {
 	code := Code(err, defaultCode)
-	message := Message(err, defaultMessage)
+	message := Message(err, defaultMessage, args...)
 
 	return code, message
 }

@@ -12,23 +12,23 @@ const (
 )
 
 // BadRequest returns *Error with bad request code.
-func BadRequest(message string) *Error {
-	return Wrap(codeBadRequest, message)
+func BadRequest(message string, args ...any) *Error {
+	return Wrap(codeBadRequest, message, args...)
 }
 
 // Forbidden returns *Error with forbidden code.
-func Forbidden(message string) *Error {
-	return Wrap(codeForbidden, message)
+func Forbidden(message string, args ...any) *Error {
+	return Wrap(codeForbidden, message, args...)
 }
 
 // NotFound returns *Error with not found code.
-func NotFound(message string) *Error {
-	return Wrap(codeNotFound, message)
+func NotFound(message string, args ...any) *Error {
+	return Wrap(codeNotFound, message, args...)
 }
 
 // RequireLogin returns *Error with require login code.
-func RequireLogin(message string) *Error {
-	return Wrap(codeRequireLogin, message)
+func RequireLogin(message string, args ...any) *Error {
+	return Wrap(codeRequireLogin, message, args...)
 }
 
 // MatchBadRequest matches err with bad request code.

@@ -58,32 +58,135 @@ func TestMessage(t *testing.T) {
 	testCases := []struct {
 		err            error
 		defaultMessage string
+		args           []any
 		message        string
 	}{
 		{
 			err:            nil,
 			defaultMessage: "xxx",
+			args:           nil,
+			message:        "",
+		},
+		{
+			err:            nil,
+			defaultMessage: "xxx %d%s",
+			args:           nil,
 			message:        "",
 		},
 		{
 			err:            io.EOF,
 			defaultMessage: "eof",
+			args:           nil,
 			message:        "eof",
+		},
+		{
+			err:            io.EOF,
+			defaultMessage: "eof %d %s",
+			args:           []any{8, "wow"},
+			message:        "eof 8 wow",
 		},
 		{
 			err:            Wrap(1000, "wow"),
 			defaultMessage: "xxx",
+			args:           nil,
 			message:        "wow",
 		},
 		{
 			err:            Wrap(1000, "eof").With(io.EOF),
 			defaultMessage: "xxx",
+			args:           nil,
 			message:        "eof",
+		},
+		{
+			err:            Wrap(1000, "eof %s%d%+v", "x", 6, true).With(io.EOF),
+			defaultMessage: "xxx",
+			args:           nil,
+			message:        "eof x6true",
 		},
 	}
 
 	for _, testCase := range testCases {
-		message := Message(testCase.err, testCase.defaultMessage)
+		message := Message(testCase.err, testCase.defaultMessage, testCase.args...)
+		if message != testCase.message {
+			t.Errorf("message %s != testCase.message %s", message, testCase.message)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestCodeMessage$
+func TestCodeMessage(t *testing.T) {
+	testCases := []struct {
+		err            error
+		defaultCode    int32
+		defaultMessage string
+		args           []any
+		code           int32
+		message        string
+	}{
+		{
+			err:            nil,
+			defaultCode:    999,
+			defaultMessage: "xxx",
+			args:           nil,
+			code:           0,
+			message:        "",
+		},
+		{
+			err:            nil,
+			defaultCode:    999,
+			defaultMessage: "xxx %d%s",
+			args:           nil,
+			code:           0,
+			message:        "",
+		},
+		{
+			err:            io.EOF,
+			defaultCode:    999,
+			defaultMessage: "eof",
+			args:           nil,
+			code:           999,
+			message:        "eof",
+		},
+		{
+			err:            io.EOF,
+			defaultCode:    999,
+			defaultMessage: "eof %d %s",
+			args:           []any{8, "wow"},
+			code:           999,
+			message:        "eof 8 wow",
+		},
+		{
+			err:            Wrap(1000, "wow"),
+			defaultCode:    999,
+			defaultMessage: "xxx",
+			args:           nil,
+			code:           1000,
+			message:        "wow",
+		},
+		{
+			err:            Wrap(1000, "eof").With(io.EOF),
+			defaultCode:    999,
+			defaultMessage: "xxx",
+			args:           nil,
+			code:           1000,
+			message:        "eof",
+		},
+		{
+			err:            Wrap(1000, "eof %s%d%+v", "x", 6, true).With(io.EOF),
+			defaultCode:    999,
+			defaultMessage: "xxx",
+			args:           nil,
+			code:           1000,
+			message:        "eof x6true",
+		},
+	}
+
+	for _, testCase := range testCases {
+		code, message := CodeMessage(testCase.err, testCase.defaultCode, testCase.defaultMessage, testCase.args...)
+		if code != testCase.code {
+			t.Errorf("code %d != testCase.code %d", code, testCase.code)
+		}
+
 		if message != testCase.message {
 			t.Errorf("message %s != testCase.message %s", message, testCase.message)
 		}

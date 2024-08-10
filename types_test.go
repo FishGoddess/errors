@@ -9,19 +9,39 @@ import "testing"
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestBadRequest$
 func TestBadRequest(t *testing.T) {
 	testCases := []struct {
-		message string
-		code    int32
+		message     string
+		args        []any
+		wantCode    int32
+		wantMessage string
 	}{
 		{
-			message: "xxx",
-			code:    codeBadRequest,
+			message:     "xxx",
+			args:        nil,
+			wantCode:    codeBadRequest,
+			wantMessage: "xxx",
+		},
+		{
+			message:     "xxx %d%.2f",
+			args:        nil,
+			wantCode:    codeBadRequest,
+			wantMessage: "xxx %d%.2f",
+		},
+		{
+			message:     "xxx %d%s%+v",
+			args:        []any{1, ".", true},
+			wantCode:    codeBadRequest,
+			wantMessage: "xxx 1.true",
 		},
 	}
 
 	for _, testCase := range testCases {
-		err := BadRequest(testCase.message)
-		if err.Code() != testCase.code {
-			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
+		err := BadRequest(testCase.message, testCase.args...)
+		if err.Code() != testCase.wantCode {
+			t.Errorf("err.Code() %d != testCase.wantCode %d", err.Code(), testCase.wantCode)
+		}
+
+		if err.Message() != testCase.wantMessage {
+			t.Errorf("err.Message() %s != testCase.wantMessage %s", err.Message(), testCase.wantMessage)
 		}
 	}
 }
@@ -29,19 +49,39 @@ func TestBadRequest(t *testing.T) {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestForbidden$
 func TestForbidden(t *testing.T) {
 	testCases := []struct {
-		message string
-		code    int32
+		message     string
+		args        []any
+		wantCode    int32
+		wantMessage string
 	}{
 		{
-			message: "xxx",
-			code:    codeForbidden,
+			message:     "xxx",
+			args:        nil,
+			wantCode:    codeForbidden,
+			wantMessage: "xxx",
+		},
+		{
+			message:     "xxx %d%.2f",
+			args:        nil,
+			wantCode:    codeForbidden,
+			wantMessage: "xxx %d%.2f",
+		},
+		{
+			message:     "xxx %d%s%+v",
+			args:        []any{1, ".", true},
+			wantCode:    codeForbidden,
+			wantMessage: "xxx 1.true",
 		},
 	}
 
 	for _, testCase := range testCases {
-		err := Forbidden(testCase.message)
-		if err.Code() != testCase.code {
-			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
+		err := Forbidden(testCase.message, testCase.args...)
+		if err.Code() != testCase.wantCode {
+			t.Errorf("err.Code() %d != testCase.wantCode %d", err.Code(), testCase.wantCode)
+		}
+
+		if err.Message() != testCase.wantMessage {
+			t.Errorf("err.Message() %s != testCase.wantMessage %s", err.Message(), testCase.wantMessage)
 		}
 	}
 }
@@ -49,19 +89,39 @@ func TestForbidden(t *testing.T) {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestNotFound$
 func TestNotFound(t *testing.T) {
 	testCases := []struct {
-		message string
-		code    int32
+		message     string
+		args        []any
+		wantCode    int32
+		wantMessage string
 	}{
 		{
-			message: "xxx",
-			code:    codeNotFound,
+			message:     "xxx",
+			args:        nil,
+			wantCode:    codeNotFound,
+			wantMessage: "xxx",
+		},
+		{
+			message:     "xxx %d%.2f",
+			args:        nil,
+			wantCode:    codeNotFound,
+			wantMessage: "xxx %d%.2f",
+		},
+		{
+			message:     "xxx %d%s%+v",
+			args:        []any{1, ".", true},
+			wantCode:    codeNotFound,
+			wantMessage: "xxx 1.true",
 		},
 	}
 
 	for _, testCase := range testCases {
-		err := NotFound(testCase.message)
-		if err.Code() != testCase.code {
-			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
+		err := NotFound(testCase.message, testCase.args...)
+		if err.Code() != testCase.wantCode {
+			t.Errorf("err.Code() %d != testCase.wantCode %d", err.Code(), testCase.wantCode)
+		}
+
+		if err.Message() != testCase.wantMessage {
+			t.Errorf("err.Message() %s != testCase.wantMessage %s", err.Message(), testCase.wantMessage)
 		}
 	}
 }
@@ -69,19 +129,39 @@ func TestNotFound(t *testing.T) {
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestRequireLogin$
 func TestRequireLogin(t *testing.T) {
 	testCases := []struct {
-		message string
-		code    int32
+		message     string
+		args        []any
+		wantCode    int32
+		wantMessage string
 	}{
 		{
-			message: "xxx",
-			code:    codeRequireLogin,
+			message:     "xxx",
+			args:        nil,
+			wantCode:    codeRequireLogin,
+			wantMessage: "xxx",
+		},
+		{
+			message:     "xxx %d%.2f",
+			args:        nil,
+			wantCode:    codeRequireLogin,
+			wantMessage: "xxx %d%.2f",
+		},
+		{
+			message:     "xxx %d%s%+v",
+			args:        []any{1, ".", true},
+			wantCode:    codeRequireLogin,
+			wantMessage: "xxx 1.true",
 		},
 	}
 
 	for _, testCase := range testCases {
-		err := RequireLogin(testCase.message)
-		if err.Code() != testCase.code {
-			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
+		err := RequireLogin(testCase.message, testCase.args...)
+		if err.Code() != testCase.wantCode {
+			t.Errorf("err.Code() %d != testCase.wantCode %d", err.Code(), testCase.wantCode)
+		}
+
+		if err.Message() != testCase.wantMessage {
+			t.Errorf("err.Message() %s != testCase.wantMessage %s", err.Message(), testCase.wantMessage)
 		}
 	}
 }
