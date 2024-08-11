@@ -43,7 +43,7 @@ func (e *Error) WithCaller() *Error {
 
 func (e *Error) WithCallers() *Error {
 	callers := Callers()
-	e.caller = strings.Join(callers, "¦")
+	e.caller = strings.Join(callers, " ¦ ")
 	return e
 }
 

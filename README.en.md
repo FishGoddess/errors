@@ -5,13 +5,13 @@
 [![Coverage](_icons/coverage.svg)](_icons/coverage.svg)
 ![Test](https://github.com/FishGoddess/errors/actions/workflows/test.yml/badge.svg)
 
-**Errors** is a lib for handling error gracefully in Go.
+**Errors** is a library for handling errors gracefully in Go.
 
 [阅读中文版的 Read me](./README.md)
 
 ### 🙋‍ Features
 
-* Handling error gracefully, yep, that's all...
+* Handling errors gracefully, yep, that's all...
 
 _Check [HISTORY.md](./HISTORY.md) and [FUTURE.md](./FUTURE.md) to know about more information._
 
