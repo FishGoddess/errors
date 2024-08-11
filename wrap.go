@@ -6,15 +6,21 @@ package errors
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"strings"
+)
+
+const (
+	keyBad     = "errors.bad_key"
+	keyCaller  = "errors.caller"
+	keyCallers = "errors.callers"
 )
 
 type Error struct {
 	code    int32
 	message string
 	cause   error
-	caller  string
+	args    map[string]any
 }
 
 // Wrap returns *Error with code and message formatted with args.
@@ -31,20 +37,30 @@ func Wrap(code int32, message string, args ...any) *Error {
 	return err
 }
 
+// With carries the cause err for *Error.
 func (e *Error) With(err error) *Error {
 	e.cause = err
 	return e
 }
 
-func (e *Error) WithCaller() *Error {
-	e.caller = Caller()
+// WithArgs carries some args for *Error.
+func (e *Error) WithArgs(key string, value any) *Error {
+	if e.args == nil {
+		e.args = make(map[string]any, 4)
+	}
+
+	e.args[key] = value
 	return e
 }
 
+// WithCaller carries the top caller for *Error.
+func (e *Error) WithCaller() *Error {
+	return e.WithArgs(keyCaller, Caller())
+}
+
+// WithCallers carries all callers for *Error.
 func (e *Error) WithCallers() *Error {
-	callers := Callers()
-	e.caller = strings.Join(callers, " ¦ ")
-	return e
+	return e.WithArgs(keyCallers, Callers())
 }
 
 // Code returns the code of *Error.
@@ -67,13 +83,24 @@ func (e *Error) Error() string {
 	return e.String()
 }
 
+func (e *Error) marshalArgs() []byte {
+	args, err := json.Marshal(e.args)
+	if err == nil {
+		return args
+	}
+
+	argsString := fmt.Sprintf(`{"args":"%+v","marshal_error":"%+v"}`, e.args, err)
+	return []byte(argsString)
+}
+
 // String returns *Error as string.
 func (e *Error) String() string {
 	var buff bytes.Buffer
 	fmt.Fprintf(&buff, "%d: %s", e.code, e.message)
 
-	if e.caller != "" {
-		fmt.Fprintf(&buff, " [%s]", e.caller)
+	if len(e.args) > 0 {
+		buff.WriteByte(' ')
+		buff.Write(e.marshalArgs())
 	}
 
 	if e.cause != nil {
