@@ -44,7 +44,7 @@ func main() {
 
 	// Also, we provide some useful information carrier for you.
 	// For examples, you can carry an error, caller information or some args.
-	// Remember the count of args should be odd and their keys should be a string.
+	// Remember the count of args should be even and their keys should be a string.
 	err = errors.Wrap(9999, "io timeout").With(io.EOF).WithCaller().WithArgs("user_id", 123, "timeout", "200ms")
 	fmt.Println(err)
 	fmt.Println(errors.CodeMessage(err, 6666, "default message"))
