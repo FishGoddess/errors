@@ -5,9 +5,36 @@
 package errors
 
 import (
+	"fmt"
 	"io"
 	"testing"
 )
+
+func compareMaps(m1 map[string]any, m2 map[string]any) error {
+	for k1, v1 := range m1 {
+		v2, ok := m2[k1]
+		if !ok {
+			return fmt.Errorf("key %s not found in m2 %+v", k1, m2)
+		}
+
+		if v1 != v2 {
+			return fmt.Errorf("v1 %+v != v2 %+v", v1, v2)
+		}
+	}
+
+	for k2, v2 := range m2 {
+		v1, ok := m1[k2]
+		if !ok {
+			return fmt.Errorf("key %s not found in m1 %+v", k2, m1)
+		}
+
+		if v1 != v2 {
+			return fmt.Errorf("v1 %+v != v2 %+v", v1, v2)
+		}
+	}
+
+	return nil
+}
 
 // go test -v -cover -count=1 -test.cpu=1 -run=^TestWrap$
 func TestWrap(t *testing.T) {
@@ -62,6 +89,44 @@ func TestWrapWith(t *testing.T) {
 
 		if err.Unwrap() != testCase.cause {
 			t.Errorf("err.Unwrap() %+v != testCase.code %+v", err.Unwrap(), testCase.cause)
+		}
+	}
+}
+
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestWrapWithArgs$
+func TestWrapWithArgs(t *testing.T) {
+	testCases := []struct {
+		code     int32
+		message  string
+		cause    error
+		args     []any
+		wantArgs map[string]any
+	}{
+		{code: -1000, message: "eof", cause: io.EOF, args: nil, wantArgs: nil},
+		{code: 1000, message: "need login", cause: nil, args: nil, wantArgs: nil},
+		{code: 1000, message: "need login", cause: nil, args: []any{io.EOF}, wantArgs: map[string]any{keyBad + "_1": io.EOF}},
+		{code: -1000, message: "eof", cause: io.EOF, args: []any{1, true, 3.14, io.EOF}, wantArgs: map[string]any{keyBad + "_1": 1, keyBad + "_2": true, keyBad + "_3": 3.14, keyBad + "_4": io.EOF}},
+		{code: -1000, message: "eof", cause: io.EOF, args: []any{1, true, 3.14, "abc"}, wantArgs: map[string]any{keyBad + "_1": 1, keyBad + "_2": true, keyBad + "_3": 3.14, keyBad + "_4": "abc"}},
+		{code: 1000, message: "need login", cause: io.EOF, args: []any{"k1", 1, "k2", true, "k3", 3.14, "key", "abc"}, wantArgs: map[string]any{"k1": 1, "k2": true, "k3": 3.14, "key": "abc"}},
+	}
+
+	for _, testCase := range testCases {
+		err := Wrap(testCase.code, testCase.message).With(testCase.cause).WithArgs(testCase.args...)
+		if err.Code() != testCase.code {
+			t.Errorf("err.Code() %d != testCase.code %d", err.Code(), testCase.code)
+		}
+
+		if err.Message() != testCase.message {
+			t.Errorf("err.Message() %s != testCase.code %s", err.Message(), testCase.message)
+		}
+
+		if err.Unwrap() != testCase.cause {
+			t.Errorf("err.Unwrap() %+v != testCase.code %+v", err.Unwrap(), testCase.cause)
+		}
+
+		args := err.Args()
+		if merr := compareMaps(args, testCase.wantArgs); merr != nil {
+			t.Error(merr)
 		}
 	}
 }

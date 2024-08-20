@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strconv"
 )
 
 const (
@@ -44,12 +45,36 @@ func (e *Error) With(err error) *Error {
 }
 
 // WithArgs carries some args for *Error.
-func (e *Error) WithArgs(key string, value any) *Error {
+func (e *Error) WithArgs(args ...any) *Error {
 	if e.args == nil {
 		e.args = make(map[string]any, 4)
 	}
 
-	e.args[key] = value
+	badKeys := 0
+	badKey := func() string {
+		badKeys++
+		return keyBad + "_" + strconv.Itoa(badKeys)
+	}
+
+	for len(args) > 0 {
+		// One last arg, tag it as bad key.
+		if len(args) == 1 {
+			e.args[badKey()] = args[0]
+			break
+		}
+
+		// len(kvs) >= 2, the key should be a string
+		k, v := args[0], args[1]
+		if ks, ok := k.(string); ok {
+			e.args[ks] = v
+		} else {
+			e.args[badKey()] = k
+			e.args[badKey()] = v
+		}
+
+		args = args[2:]
+	}
+
 	return e
 }
 
@@ -73,9 +98,23 @@ func (e *Error) Message() string {
 	return e.message
 }
 
-// Unwrap unwraps *Error and returns its cause error.
+// Unwrap returns the cause of *Error.
 func (e *Error) Unwrap() error {
 	return e.cause
+}
+
+// Args returns the args of *Error.
+func (e *Error) Args() map[string]any {
+	if e.args == nil {
+		return nil
+	}
+
+	args := make(map[string]any, len(e.args))
+	for k, v := range e.args {
+		args[k] = v
+	}
+
+	return args
 }
 
 // Error returns *Error as string.
