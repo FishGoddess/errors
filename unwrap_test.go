@@ -193,51 +193,51 @@ func TestCodeMessage(t *testing.T) {
 	}
 }
 
-// go test -v -cover -count=1 -test.cpu=1 -run=^TestMatch$
-func TestMatch(t *testing.T) {
+// go test -v -cover -count=1 -test.cpu=1 -run=^TestIsCode$
+func TestIsCode(t *testing.T) {
 	testErr := &testError{}
 
 	testCases := []struct {
-		err   error
-		code  int32
-		match bool
+		err  error
+		code int32
+		is   bool
 	}{
 		{
-			err:   nil,
-			code:  0,
-			match: true,
+			err:  nil,
+			code: 0,
+			is:   true,
 		},
 		{
-			err:   nil,
-			code:  999,
-			match: false,
+			err:  nil,
+			code: 999,
+			is:   false,
 		},
 		{
-			err:   io.EOF,
-			code:  999,
-			match: false,
+			err:  io.EOF,
+			code: 999,
+			is:   false,
 		},
 		{
-			err:   testErr,
-			code:  testErr.Code(),
-			match: true,
+			err:  testErr,
+			code: testErr.Code(),
+			is:   true,
 		},
 		{
-			err:   Wrap(1000, "wow"),
-			code:  1000,
-			match: true,
+			err:  Wrap(1000, "wow"),
+			code: 1000,
+			is:   true,
 		},
 		{
-			err:   Wrap(1000, "eof").With(io.EOF),
-			code:  1000,
-			match: true,
+			err:  Wrap(1000, "eof").With(io.EOF),
+			code: 1000,
+			is:   true,
 		},
 	}
 
 	for _, testCase := range testCases {
-		match := Match(testCase.err, testCase.code)
-		if match != testCase.match {
-			t.Errorf("match %+v != testCase.match %+v", match, testCase.match)
+		is := IsCode(testCase.err, testCase.code)
+		if is != testCase.is {
+			t.Errorf("got %+v != want %+v", is, testCase.is)
 		}
 	}
 }

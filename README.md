@@ -54,16 +54,13 @@ func main() {
 	berr := errors.BadRequest("id is wrong")
 	ferr := errors.Forbidden("user isn't allowed")
 	nerr := errors.NotFound("book not found")
-	rerr := errors.RequireLogin("user requires login")
-	fmt.Printf("%+v\n%+v\n%+v\n%+v\n", berr, ferr, nerr, rerr)
+	fmt.Printf("%+v\n%+v\n%+v\n", berr, ferr, nerr)
 
-	isBadRequest := errors.MatchBadRequest(berr)
-	isForbidden := errors.MatchForbidden(ferr)
-	isNotFound := errors.MatchNotFound(nerr)
-	isRequireLogin := errors.MatchRequireLogin(rerr)
-	fmt.Printf("isBadRequest: %+v\nisForbidden: %+v\nisNotFound: %+v\nisRequireLogin: %+v\n", isBadRequest, isForbidden, isNotFound, isRequireLogin)
+	isBadRequest := errors.IsBadRequest(berr)
+	isForbidden := errors.IsForbidden(ferr)
+	isNotFound := errors.IsNotFound(nerr)
+	fmt.Printf("isBadRequest: %+v\nisForbidden: %+v\nisNotFound: %+v\n", isBadRequest, isForbidden, isNotFound)
 }
-
 ```
 
 * [basic](_examples/basic.go)
