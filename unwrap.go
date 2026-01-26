@@ -67,8 +67,8 @@ func CodeMessage(err error, defaultCode int32, defaultMessage string, args ...an
 	return code, message
 }
 
-// Match unwraps error and check if its code equals to code.
-func Match(err error, code int32) bool {
+// IsCode unwraps error and check if its code equals to code.
+func IsCode(err error, code int32) bool {
 	if err == nil {
 		return code == 0
 	}
@@ -86,4 +86,10 @@ func Match(err error, code int32) bool {
 	}
 
 	return false
+}
+
+// Match unwraps error and check if its code equals to code.
+// Deprecated: Use IsCode instead because this name is 'ugly' to me.
+func Match(err error, code int32) bool {
+	return IsCode(err, code)
 }
